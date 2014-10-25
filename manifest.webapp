@@ -21,6 +21,10 @@
     },
     "systemXHR": {
       "description": "Required to contact remote CardDAV server"
+    },
+      "device-storage:sdcard": {
+      "access": "readwrite",
+      "description": "Required to manage local contact database"
     }
   },
   "installs_allowed_from": [

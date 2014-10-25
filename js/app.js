@@ -9,11 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
   'use strict';
 
   var translate = navigator.mozL10n.get;
-  var request;
-  var currentUrl;
-  var currentLogin;
-  var currentPassword;
-  var currentKey;
+
   var stuffToDo;
   var contactNumber;
   var divLog;
@@ -51,128 +47,25 @@ window.addEventListener('DOMContentLoaded', function() {
   
   function registerConnexion() { 
  
-    request = new XMLHttpRequest({ mozSystem: true });
-
+    var request = new XMLHttpRequest({ mozSystem: true });
+    var server = new DistantServer();
     //============= request parameters =========================
     var type = "PROPFIND";
-    var url = document.getElementById("url").value;
+    server.url = document.getElementById("url").value;
     var async = true;
-    var login = document.getElementById("login").value;
-    var password = document.getElementById("password").value;
+    server.login = document.getElementById("login").value;
+    server.password = document.getElementById("password").value;
     //==========================================================
+    server.name = document.getElementById("name").value;
     var requestText='<?xml version="1.0" encoding="utf-8"?><D:propfind xmlns:D="DAV:"><D:prop><D:getcontenttype/><D:getetag/></D:prop></D:propfind>';
    
-    request.open(type, url, async, login, password);
+    request.open(type, server.url, async, server.login, server.password);
     request.responseType = 'text/xml; charset=utf-8';
 
-    // We're setting some handlers here for dealing with both error and
-    // data received. We could just declare the functions here, but they are in
-    // separate functions so that search() is shorter, and more readable.
     request.addEventListener('error', onRequestError);
-    request.onreadystatechange = isValidCardDavServer;
+    request.onreadystatechange = function() {server.isValidCarddavServer(request);};
     request.send(requestText);
 
-  }
-
-  function isValidCardDavServer () {
-    var state = request.readyState;
-    var loader = document.getElementById("loader");
-   
-    if(state < 4) {
-      loader.innerHTML = translate('loader_occuring')
-    }
-    else {
-      // verify data
-      var response = request.responseXML;
-      if(response === null){
-          loader.innerHTML = translate('loader_error_cert');  
-      }
-      else{
-        if(response.firstChild.tagName == "d:multistatus" || response.firstChild.tagName == "D:multistatus"){
-          // memorize server info
-          var responseObjList = response.firstChild.childNodes;
-          var type = "";
-          // look for vcard type
-          var isAddressbook = false;
-          for(var j = 0; j < responseObjList.length; j++){
-            if(isAddressbook == true){
-             break;
-            }
-            var detailedObjList = responseObjList[j].childNodes;
-            for(var l = 0; l < detailedObjList.length; l++){
-              if(isAddressbook == true){
-               break;
-              }
-              if(detailedObjList[l].tagName == "d:propstat" || detailedObjList[l].tagName == "D:propstat"){
-                // recuperer un objet d:prop
-                for(var m = 0; m < detailedObjList[l].childNodes.length; m++){
-                  if(detailedObjList[l].childNodes[m].tagName == "d:prop" || detailedObjList[l].childNodes[m].tagName == "D:prop"){
-                     var prop = detailedObjList[l].childNodes[m];
-                     var propObjList = prop.childNodes;
-                     for(var k = 0; k < propObjList.length; k++){
-                     console.info(propObjList[k].tagName);
-                        if(propObjList[k].tagName == "d:getcontenttype" || propObjList[k].tagName == "D:getcontenttype"){
-                          type = propObjList[k].textContent;
-                          if(type.indexOf("text/x-vcard") != -1){
-                            isAddressbook = true;
-                            break;
-                          }
-                       }
-                     }
-                  }
-                }
-              }   
-            }  
-          }
-          if(isAddressbook == true){
-            saveServerData();
-            loader.innerHTML = translate('loader_success');  
-          }
-          else{
-            loader.innerHTML = translate('loader_not_addressbook');  
-          }
-        }
-        else{
-          loader.innerHTML = translate('loader_error'); 
-        }
-      }
-    }
-  };
-  
-  function onRequestError() {
-    var loader = document.getElementById("loader");
-    loader.innerHTML = translate('loader_error');
-    console.error("http status code : "+request.statusText);
-    
-  }
-  
-  function saveServerData() {
-    if(localStorage.getItem('servers') == undefined){
-      var servers = new Array();
-      var server = new Array();
-      server[0] = document.getElementById("name").value;
-      server[1] = document.getElementById("login").value;
-      server[2] = document.getElementById("password").value;
-      server[3] = document.getElementById("url").value;
-      
-      servers[servers.length] = server;
-      
-      localStorage.setItem('servers', JSON.stringify(servers));
-    }
-    else{
-      var servers = JSON.parse(localStorage.getItem('servers'));
-      servers = [].concat(servers);
-      var server = new Array();
-      server[0] = document.getElementById("name").value;
-      server[1] = document.getElementById("login").value;
-      server[2] = document.getElementById("password").value;
-      server[3] = document.getElementById("url").value;
-      
-      servers.push(server);
-      localStorage.setItem('servers', JSON.stringify(servers));
-    }
-    
-    // reloadServersList();
   }
   
   function reloadServersList() {
@@ -240,100 +133,17 @@ window.addEventListener('DOMContentLoaded', function() {
         thisServer = server;
       }
     }
+    var dServer = new DistantServer();
+    dServer.name = thisServer[0];
+    dServer.login = thisServer[1];
+    dServer.password = thisServer[2];
+    dServer.url = thisServer[3];
+      
+    // sync process start
+    // retrieve server data
+    dServer.loadvCardList();
     
-    // here we get the right server, now sync
-    request = new XMLHttpRequest({ mozSystem: true });
-
-    //============= request parameters =========================
-    var type = "PROPFIND";
-    var url = thisServer[3];
-    var async = true;
-    var login = thisServer[1];
-    var password = thisServer[2];
-    //==========================================================
-    var requestText='<?xml version="1.0" encoding="utf-8"?><D:propfind xmlns:D="DAV:"><D:prop><D:getcontenttype/><D:getetag/></D:prop></D:propfind>';
-   
-    request.open(type, url, async, login, password);
-    currentUrl = url;
-    currentLogin = login;
-    currentPassword = password;
-    currentKey = thisServer[0];
-    request.responseType = 'text/xml; charset=utf-8';
-
-    // We're setting some handlers here for dealing with both error and
-    // data received. We could just declare the functions here, but they are in
-    // separate functions so that search() is shorter, and more readable.
-    request.addEventListener('error', onRequestError);
-    request.onreadystatechange = syncServerWithPhone;
-    request.send(requestText);
   } 
-  
-  function syncServerWithPhone () {
-    var state = request.readyState;
-    if(state < 4) {
-    }
-    else {
-      // get addressbook
-      var response = request.responseXML
-      if(response.firstChild.tagName == "d:multistatus" || response.firstChild.tagName == "D:multistatus"){
-        stuffToDo = new Array();
-        // load each contact
-        var responseList = response.firstChild.childNodes;
-        divLog = document.getElementById("log_"+currentKey);
-        for(var i = 0; i < responseList.length; i++){
-          
-          var responseObjList = responseList[i].childNodes;
-          var href = "";
-          for(var j = 0; j < responseObjList.length; j++){
-            if(responseObjList[j].tagName == "d:href" || responseObjList[j].tagName == "D:href"){
-              href = responseObjList[j].textContent;
-            }
-          }
-          if(href.contains(".vcf")){
-            var hreftab = href.split("/");
-            stuffToDo.push(hreftab[hreftab.length-1])
-          }        
-        }
-        contactNumber = stuffToDo.length;
-        syncAddressbookWithPhone();
-      }
-      }
-    }
- //console.debug("response : "+request.responseText);
-  
-  function syncAddressbookWithPhone(){
-    var contactRequest = new XMLHttpRequest({ mozSystem: true });
-    //============= request parameters =========================
-     var type = "GET";
-     var url = currentUrl+ "/" +stuffToDo.pop();
-     var async = true;
-     var login = currentLogin;
-     var password = currentPassword;
-     //==========================================================
-     contactRequest.open(type, url, async, login, password);
-     contactRequest.send();
-     contactRequest.onreadystatechange = function(){
-       if(contactRequest.readyState < 4){
-       }
-       else{
-          if(contactRequest.responseText != undefined){
-            var normalizedVCard = basicRFCFixesAndCleanup(contactRequest.responseText);
-            // transfert to firefox OS contact structure
-            var contact = vCardToContactObject(normalizedVCard);
-            // try to merge with existing contact
-            compareToExistingContacts(contact);
-            var percentage = ((contactNumber - stuffToDo.length)/contactNumber) * 100;
-            var logMessage = "sync : "+parseInt(percentage)+"%";
-            if(percentage == 100){  
-             logMessage = "sync successful";
-            }
-            divLog.innerHTML = logMessage;    
-           if(stuffToDo.length > 0){
-             syncAddressbookWithPhone();
-           }
-         }
-       }
-     }
-  }                       
+                    
   //end of app
 });
