@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CardDAVSync</title>
+        <meta name="description" content="Sync your cardDAV server with your phone contacts">
+
+        <!--
+          viewport allows you to control how mobile browsers will render your content.
+          width=device-width tells mobile browsers to render your content across the
+          full width of the screen, without being zoomed out (by default it would render
+          it at a desktop width, then shrink it to fit.)
+          Read more about it here:
+          https://developer.mozilla.org/Mozilla/Mobile/Viewport_meta_tag
+        -->
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/app.css">
+
+        <!--
+        Inline JavaScript code is not allowed for privileged and certified apps,
+        due to Content Security Policy restrictions.
+        You can read more about it here: https://developer.mozilla.org/Apps/CSP
+        Plus keeping your JavaScript separated from your HTML is always a good practice!
+
+        We're also using the 'defer' attribute. This allows us to tell the browser that
+        it should not wait for this file to load before continuing to load the rest of
+        resources in the page. Then, once everything has been loaded, it will parse and
+        execute the deferred files.
+        Read about defer: https://developer.mozilla.org/Web/HTML/Element/script#attr-defer
+        -->
+        <!--
+        The following two lines are for loading the localisations library
+        and the localisation data-so people can use the app in their
+        own language (as long as you provide translations).
+        -->
+        <link rel="prefetch" type="application/l10n" href="data/locales.ini" />
+        <script type="text/javascript" src="js/libs/l10n.js" defer></script>
+    </head>
+    <body>
+        <section>
+            <div id="header" class="div_container">
+               <h1 data-l10n-id="app_title"></h1>
+            </div>
+            <div id="banner">
+                <a href="index.html" data-l10n-id="sync_link"></a>
+                <a href="inputform.html" data-l10n-id="inputform_link"></a>
+                <a href="help.html" data-l10n-id="help_link"></a>
+            </div>
+           <h3 data-l10n-id="serverpattern_title"></h3>
+            <p>
+                Baikal : http(s)://[your.domain.com]/baikal/card.php/adressbooks/[user]/[book]
+            </p>
+            <p>
+                Owncloud : http(s)://[your.domain.com]/owncloud/remote.php/carddav/adressbooks/[user]/[book]
+           </p>
+            <p>
+                SOGo : http(s)://[your.domain.com]/SOGo/dav/[user]/Contacts/[book]
+           </p>
+           <h3 data-l10n-id="servercert_title"></h3>
+            <p>
+                You must accept your server SSL certificate from Firefox browser. just type https://[yourdomain] in the Firefox browser then add a permanent security exception.
+            </p>
+           <h3 data-l10n-id="doublon_title"></h3>
+            <p>
+                Firefox OS default contact list is not always up-to-date after using CardDAVSync. You can force the refresh by killing the app (long press on home button, then close the contact app) or by rebooting your phone.
+            </p>
+            <h3 data-l10n-id="syncmode_title"></h3>
+            <p>
+                No, this app sync only when you press the "sync" button. It does it only FROM the server TO the phone, it won't load your new contacts to the server (at least not yet, but i'm working on it).
+            </p>
+            <h3 data-l10n-id="whatsync_title"></h3>
+            <p>
+                This app proudly support the followings Carddav v3 fields :
+            </p>
+                <ul>
+                    <li>given name</li>
+                    <li>first name</li>
+                    <li>last name</li>
+                    <li>emails</li>
+                    <li>phone numbers</li>
+                    <li>address</li>
+                    <li>photo</li>
+                    <li>honorific prefix</li>
+                    <li>honorific suffix</li>
+                    <li>additional name</li>
+                    <li>nickname</li>
+                    <li>categories</li>
+                    <li>birthday</li>
+                    <li>note</li>
+               </ul>
+            <h3 data-l10n-id="gethelp_title"></h3>
+            <p>
+                E-mail me at <a href="mailto:liartes@exileas.com">this address</a> with the following informations : 
+                   <ul>
+                       <li>your phone model (Open C, Flame ...) </li>
+                       <li>your carddav server (owncloud, SOGo ...)</li>
+                       <li>the bug you are experiencing</li>
+                  </ul>
+            </p>
+        </section>
+    </body>
+</html>
