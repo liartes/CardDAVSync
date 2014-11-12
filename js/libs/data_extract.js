@@ -240,14 +240,18 @@
 		
 		// ------------------------------------------------------------------------------------- //
 		// NOTE -> TODO: what to do if present more than once?
-		while((	vcard_element=vcard.match(vCard.pre['contentline_NOTE']) != null)){	
-
-				// parsed (contentline_parse) = [1]->"group.", [2]->"name", [3]->";param;param", [4]->"value"
-				parsed=vcard_element[0].match(vCard.pre['contentline_parse']);
-				notes.push(parsed[4]);
-				// remove the processed parameter
-				vcard=vcard.replace(vcard_element[0],'\r\n');
-		}
+			vcard_element=vcard.match(vCard.pre['contentline_NOTE']);
+			if(vcard_element!=null)
+			{
+				if(vcard_element.length==1)	// if the NOTE attribute is present exactly once
+				{
+					// parsed (contentline_parse) = [1]->"group.", [2]->"name", [3]->";param;param", [4]->"value"
+					parsed=vcard_element[0].match(vCard.pre['contentline_parse']);
+					notes.push(parsed[4]);
+					// remove the processed parameter
+					vcard=vcard.replace(vcard_element[0],'\r\n');
+				}
+			}
 		
 			// ------------------------------------------------------------------------------------- //
 		// PHOTO -> TODO: what to do if present more than once?

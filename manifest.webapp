@@ -25,7 +25,10 @@
       "device-storage:sdcard": {
       "access": "readwrite",
       "description": "Required to manage local contact database"
-    }
+    },
+      "storage": {
+       "description": "Required if addressbooks is larger than 5mb"
+      }
   },
   "installs_allowed_from": [
     "*"
