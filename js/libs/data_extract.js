@@ -26,6 +26,7 @@
     var nickName = new Array();
 		var bday = null;
 		var notes = new Array();
+		var addresses = new Array();
 		
 		// FN -> TODO: what to do if present more than once?
 		var vcard_element=vcard.match(vCard.pre['contentline_FN']);
@@ -143,11 +144,94 @@
         'carrier': null,
         'pref': isPref,
         'type': type_values,
-        'value':parsed[4]
+        'value': parsed[4]
       }
      
       tel.push(aTel);
 			
+		}
+		// ------------------------------------------------------------------------------------- //
+		// ADR
+		while((vcard_element=vcard.match(vCard.pre['contentline_ADR']))!=null)
+		{
+			// parsed (contentline_parse) = [1]->"group.", [2]->"name", [3]->";param;param", [4]->"value"
+			parsed=vcard_element[0].match(vCard.pre['contentline_parse']);
+			// parsed_param = [1..]->ADR-params
+			parsed_param=vcardSplitParam(parsed[3]);
+			// parsed_value = [1..]->ADR elements
+			parsed_value=vcardSplitValue(parsed[4],';');
+			
+			// get the "TYPE=" values array
+			pref=0;	//by default there is no preferred phone number
+			type_values=Array();
+			j=0;
+			for(i=1;i<parsed_value.length;i++)
+			{
+				if(parsed_value[i].toLowerCase().indexOf('type=')==0)
+				{
+					type_values_tmp=parsed_value[i].replace(/^[^=]+=/,'');
+					// if one value is a comma separated value of parameters
+					type_values_tmp_2=type_values_tmp.split(',');
+					for(m=0;m<type_values_tmp_2.length;m++)
+						if(type_values_tmp_2[m].match(RegExp('^pref$','i'))==undefined)
+							type_values[j++]=vcardUnescapeValue(type_values_tmp_2[m]).toLowerCase();
+						else
+							pref=1;
+				}
+			}
+			// APPLE SPECIFIC data:
+			// find the corresponding group.X-ABLabel: used by APPLE as "TYPE"
+			if(parsed[1]!='')
+			{
+				re=parsed[1].replace('.','\\.X-ABLabel:(.*)')+'\r\n';
+				while((vcard_element_related=vcard.match(RegExp('\r\n'+re,'im')))!=null)
+				{
+					// get the X-ABLabel value
+					if(type_values.indexOf(vcard_element_related[1].toLowerCase())==-1)
+						type_values[j++]=vcardUnescapeValue(':'+vcard_element_related[1]+':').toLowerCase();
+					// remove the processed parameter
+					vcard=vcard.replace(vcard_element_related[0],'\r\n');
+				}
+			}
+			// find the corresponding group.X-ABADR: used by APPLE as short address country
+			var addr_country='';
+			if(parsed[1]!='')
+			{
+				re=parsed[1].replace('.','\\.X-ABADR:(.*)')+'\r\n';
+				if((vcard_element_related=vcard.match(RegExp('\r\n'+re,'m')))!=null)
+				{
+					// get the X-ABADR value
+					addr_country=vcardUnescapeValue(vcard_element_related[1]).toLowerCase();
+					// remove the processed parameter
+					vcard=vcard.replace(vcard_element_related[0],'\r\n');
+				}
+			}
+			
+			type_values_txt=type_values.unique().sort().join(',');	// TYPE=HOME;TYPE=HOME;TYPE=FAX; -> array('FAX','HOME') -> 'fax,home'
+			type_values_txt_label=type_values.unique().sort().join(' ').replace(RegExp('^:|:$','g'),'');	// TYPE=HOME;TYPE=HOME;TYPE=FAX; -> array('FAX','HOME') -> 'fax home'
+			// if no address type defined, we use the 'work' type as default
+			if(type_values_txt=='')
+				type_values_txt=type_values_txt_label='work';
+
+			// remove the processed parameter
+			vcard=vcard.replace(vcard_element[0],'\r\n');
+			
+      var isPref = false;
+      if(pref == 1){
+        isPref = true;
+      }
+			
+			var aAdr = {
+				'type' : type_values,
+				'pref' : isPref,
+				'streetAddress' : parsed_value[2],
+				'locality' : parsed_value[3],
+				'region' : parsed_value[4],
+				'postalCode' : parsed_value[5],
+				'countryName' : parsed_value[6]
+			}
+			
+			addresses.push(aAdr);
 		}
 		
 		// ------------------------------------------------------------------------------------- //
@@ -294,7 +378,8 @@
 			'photo': photos,
 			'bday': bday,
 			'category': categories,
-			'note': notes
+			'note': notes,
+			'adr' : addresses
    }
     return contactData;
   }
@@ -354,9 +439,12 @@
     if(oldC.category != newC.category){
       oldC.category = mergeArrayFields(oldC.category, newC.category);
     }
-    if(oldC.notes != newC.notes){
-      oldC.notes = mergeArrayFields(oldC.notes, newC.notes);
+    if(oldC.note != newC.note){
+      oldC.notes = mergeArrayFields(oldC.note, newC.note);
     }
+		if(oldC.adr != newC.adr){
+			oldC.adr = mergeAdrFields(oldC.adr, newC.adr);
+		}
 		// unique value : no merge method
 		if(oldC.bday != newC.bday){
 			oldC.bday = newC.bday;
@@ -404,6 +492,25 @@
   }
 
   function mergeTelFields(a, b){
+		var i = 0;
+    while(b[i] != undefined){
+			var toAdd = true;
+			var j = 0;
+			while(a[j] != undefined){
+				if(a[j].value === b[i].value){
+					toAdd = false;
+				}
+				j++;
+			}
+      if(toAdd){
+        a.push(b[i]);
+      }
+			i++
+      }
+    return a;
+  }  
+
+	function mergeAdrFields(a, b){
 		var i = 0;
     while(b[i] != undefined){
 			var toAdd = true;
