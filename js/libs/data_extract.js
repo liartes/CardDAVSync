@@ -27,6 +27,7 @@
 		var bday = null;
 		var notes = new Array();
 		var addresses = new Array();
+		var contactUrls = new Array();
 		
 		// FN -> TODO: what to do if present more than once?
 		var vcard_element=vcard.match(vCard.pre['contentline_FN']);
@@ -235,6 +236,71 @@
 		}
 		
 		// ------------------------------------------------------------------------------------- //
+		// URL
+		while((vcard_element=vcard.match(vCard.pre['contentline_URL']))!=null)
+		{
+			// parsed (contentline_parse) = [1]->"group.", [2]->"name", [3]->";param;param", [4]->"value"
+			parsed=vcard_element[0].match(vCard.pre['contentline_parse']);
+			// parsed_value = [1..]->URL-params
+			parsed_value=vcardSplitParam(parsed[3]);
+
+			// get the "TYPE=" values array
+			pref=0;	//by default there is no preferred url address
+			type_values=Array();
+			j=0;
+			for(i=1;i<parsed_value.length;i++)
+			{
+				if(parsed_value[i].toLowerCase().indexOf('type=')==0)
+				{
+					type_values_tmp=parsed_value[i].replace(/^[^=]+=/,'');
+					// if one value is a comma separated value of parameters
+					type_values_tmp_2=type_values_tmp.split(',');
+					for(m=0;m<type_values_tmp_2.length;m++)
+						if(type_values_tmp_2[m].match(RegExp('^pref$','i'))==undefined)
+							type_values[j++]=vcardUnescapeValue(type_values_tmp_2[m]).toLowerCase();
+						else
+							pref=1;
+				}
+			}
+			// APPLE SPECIFIC types:
+			// find the corresponding group.X-ABLabel: used by APPLE as "TYPE"
+			if(parsed[1]!='')
+			{
+				re=parsed[1].replace('.','\\.X-ABLabel:(.*)')+'\r\n';
+				while((vcard_element_related=vcard.match(RegExp('\r\n'+re,'im')))!=null)
+				{
+					// get the X-ABLabel value
+					if(type_values.indexOf(vcard_element_related[1].toLowerCase())==-1)
+						type_values[j++]=vcardUnescapeValue(':'+vcard_element_related[1]+':').toLowerCase();
+					// remove the processed parameter
+					vcard=vcard.replace(vcard_element_related[0],'\r\n');
+				}
+			}
+
+			type_values_txt=type_values.unique().sort().join(',');	// TYPE=WORK;TYPE=WORK;TYPE=HOME; -> array('HOME','WORK') -> 'home,work'
+			type_values_txt_label=type_values.unique().sort().join(' ').replace(RegExp('^:|:$','g'),'');	// TYPE=WORK;TYPE=WORK;TYPE=HOME; -> array('HOME','WORK') -> 'home work'
+			// if no url type defined, we use the 'homepage' type as default
+			if(type_values_txt=='')
+				type_values_txt=type_values_txt_label='homepage';
+
+			// remove the processed parameter
+			vcard=vcard.replace(vcard_element[0],'\r\n');
+     
+			var isPref = false;
+      if(pref == 1){
+        isPref = true;
+      }	
+			
+			var aUrl = {
+				'type' : type_values,
+				'pref' : isPref,
+				'value' : parsed[4]
+			};
+			contactUrls.push(aUrl);
+
+		}
+
+		// ------------------------------------------------------------------------------------- //
 		// BDAY
 		vcard_element=vcard.match(vCard.pre['contentline_BDAY']);
 		if(vcard_element!=null)	{
@@ -317,7 +383,7 @@
         'type': type_values,
         'pref': isPref,
         'value':parsed[4]
-      }
+      };
       mails.push(aMail);
       
 		} 
@@ -379,7 +445,8 @@
 			'bday': bday,
 			'category': categories,
 			'note': notes,
-			'adr' : addresses
+			'adr' : addresses,
+			'url' : contactUrls
    }
     return contactData;
   }
@@ -444,6 +511,9 @@
     }
 		if(oldC.adr != newC.adr){
 			oldC.adr = mergeAdrFields(oldC.adr, newC.adr);
+		}
+		if(oldC.url != newC.url){
+			oldC.url = mergeAdrFields(oldC.url, newC.url);
 		}
 		// unique value : no merge method
 		if(oldC.bday != newC.bday){
