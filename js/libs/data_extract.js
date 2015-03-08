@@ -476,164 +476,57 @@
   }
   
   function mergeContact(oldC, newC){
-    if(oldC.givenName != newC.givenName){
+    if(!oldC.givenName.equals(newC.givenName)){
       oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);
     }
-    if(oldC.familyName != newC.familyName){
+    if(!oldC.familyName.equals(newC.familyName)){
       oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);
     }
-    if(oldC.email != newC.email){
-      oldC.email = mergeMailFields(oldC.email, newC.email);  
+    if(!oldC.email.equals(newC.email)){
+      oldC.email = mergeArrayFields(oldC.email, newC.email);  
     }
-    if(oldC.tel != newC.tel){
-      oldC.tel = mergeTelFields(oldC.tel, newC.tel);
+    if(!oldC.tel.equals(newC.tel)){
+      oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
     }
-    if(oldC.photo != newC.photo){
-      oldC.photo = mergeBlobFields(oldC.photo, newC.photo);
+    if(!oldC.photo.equals(newC.photo)){
+      oldC.photo = mergeArrayFields(oldC.photo, newC.photo);
     }
-    if(oldC.honorificPrefix != newC.honorificPrefix){
+    if(!oldC.honorificPrefix.equals(newC.honorificPrefix)){
       oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);
     }
-    if(oldC.honorificSuffix != newC.honorificSuffix){
+    if(!oldC.honorificSuffix.equals(newC.honorificSuffix)){
       oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);
     }
-    if(oldC.additionnalName != newC.additionnalName){
+    if(!oldC.additionnalName.equals(newC.additionnalName)){
       oldC.additionnalName = mergeArrayFields(oldC.additionnalName, newC.additionnalName);
     }
-    if(oldC.nickName != newC.nickName){
+    if(!oldC.nickName.equals(newC.nickName)){
       oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
     }
-    if(oldC.category != newC.category){
+    if(!oldC.category.equals(newC.category)){
       oldC.category = mergeArrayFields(oldC.category, newC.category);
     }
-    if(oldC.note != newC.note){
+    if(!oldC.note.equals(newC.note)){
       oldC.notes = mergeArrayFields(oldC.note, newC.note);
     }
-		if(oldC.adr != newC.adr){
-			oldC.adr = mergeAdrFields(oldC.adr, newC.adr);
+		if(!oldC.adr.equals(newC.adr)){
+			oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
 		}
-		if(oldC.url != newC.url){
-			oldC.url = mergeAdrFields(oldC.url, newC.url);
+		if(oldC.url.equals(newC.url)){
+			oldC.url = mergeArrayFields(oldC.url, newC.url);
 		}
 		// unique value : no merge method
-		if(oldC.bday != newC.bday){
+		if(oldC.bday.getTime() != newC.bday.getTime()){
 			oldC.bday = newC.bday;
 		}
     return oldC;
   }
   
   function mergeArrayFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j] === b[i]){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
-    return a;
-  }
-
-  
-  function mergeMailFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j].value === b[i].value){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
-    return a;
-  }
-
-  function mergeTelFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j].value === b[i].value){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
-    return a;
-  }  
-
-	function mergeAdrFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j].value === b[i].value){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
-    return a;
-  }
-
-  function mergeBlobFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j].size === b[i].size && a[j].type === b[i].type){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
-    return a;
-  }
-
-  function mergeBlobFields(a, b){
-		var i = 0;
-    while(b[i] != undefined){
-			var toAdd = true;
-			var j = 0;
-			while(a[j] != undefined){
-				if(a[j].size === b[i].size && a[j].type === b[i].type){
-					toAdd = false;
-				}
-				j++;
-			}
-      if(toAdd){
-        a.push(b[i]);
-      }
-			i++
-      }
+		while (a.pop()) {}
+		for(var i = 0; i < b.length; i++) {
+			a.push(b[i]);
+		}
     return a;
   }
 

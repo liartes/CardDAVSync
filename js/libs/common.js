@@ -1,20 +1,29 @@
-/*
-CardDavMATE - CardDav Web Client
-Copyright (C) 2011-2013 Jan Mate <jan.mate@inf-it.com>
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+    // compare lengths - can save a lot of time 
+    if (this.length != array.length)
+        return false;
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+    for (var i = 0, l=this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;       
+        }           
+        else if (this[i] != array[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+						if(JSON.stringify(this[i]) !== JSON.stringify(array[i])) {
+								return false;
+						}
+        }           
+    }       
+    return true;
+}  
 
 // Used to match XML element names with any namespace
 jQuery.fn.filterNsNode=function(nameOrRegex)

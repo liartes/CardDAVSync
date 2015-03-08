@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.6",
   "name": "CardDAVSync",
   "description": "CardDAV sync allow you to synchronize your CardDAV server with your Firefox OS phone",
   "launch_path": "/index.html",
