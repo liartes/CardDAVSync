@@ -1,4 +1,4 @@
-  function vCardToContactObject(normalizedVCard) {
+function vCardToContactObject(normalizedVCard) {
     var struct = vcardParsingData(normalizedVCard.vcard);
     var person = undefined
     if(struct != false){             
@@ -465,6 +465,7 @@
           navigator.mozContacts.save(contact);
         }
         else{
+					console.debug(this.result.length+" concordances dans le repertoire");
           var contactToSave = mergeContact(this.result[0], contact);
           navigator.mozContacts.save(contactToSave);
         }
@@ -476,43 +477,43 @@
   }
   
   function mergeContact(oldC, newC){
-    if(!oldC.givenName.equals(newC.givenName)){
+    if(!arraysEquals(oldC.givenName,newC.givenName)){
       oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);
     }
-    if(!oldC.familyName.equals(newC.familyName)){
+    if(!arraysEquals(oldC.familyName,newC.familyName)){
       oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);
     }
-    if(!oldC.email.equals(newC.email)){
+    if(!arraysEquals(oldC.email,newC.email)){
       oldC.email = mergeArrayFields(oldC.email, newC.email);  
     }
-    if(!oldC.tel.equals(newC.tel)){
+    if(!arraysEquals(oldC.tel,newC.tel)){
       oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
     }
-    if(!oldC.photo.equals(newC.photo)){
+    if(!arraysEquals(oldC.photo,newC.photo)){
       oldC.photo = mergeArrayFields(oldC.photo, newC.photo);
     }
-    if(!oldC.honorificPrefix.equals(newC.honorificPrefix)){
+    if(!arraysEquals(oldC.honorificPrefix,newC.honorificPrefix)){
       oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);
     }
-    if(!oldC.honorificSuffix.equals(newC.honorificSuffix)){
+    if(!arraysEquals(oldC.honorificSuffix,newC.honorificSuffix)){
       oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);
     }
-    if(!oldC.additionnalName.equals(newC.additionnalName)){
-      oldC.additionnalName = mergeArrayFields(oldC.additionnalName, newC.additionnalName);
+    if(!arraysEquals(oldC.additionalName,newC.additionalName)){
+      oldC.additionnalName = mergeArrayFields(oldC.additionalName, newC.additionalName);
     }
-    if(!oldC.nickName.equals(newC.nickName)){
+    if(!arraysEquals(oldC.nickName,newC.nickName)){
       oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
     }
-    if(!oldC.category.equals(newC.category)){
+    if(!arraysEquals(oldC.category,newC.category)){
       oldC.category = mergeArrayFields(oldC.category, newC.category);
     }
-    if(!oldC.note.equals(newC.note)){
+    if(!arraysEquals(oldC.note,newC.note)){
       oldC.notes = mergeArrayFields(oldC.note, newC.note);
     }
-		if(!oldC.adr.equals(newC.adr)){
+		if(!arraysEquals(oldC.adr,newC.adr)){
 			oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
 		}
-		if(oldC.url.equals(newC.url)){
+		if(!arraysEquals(oldC.url,newC.url)){
 			oldC.url = mergeArrayFields(oldC.url, newC.url);
 		}
 		// unique value : no merge method
@@ -523,9 +524,14 @@
   }
   
   function mergeArrayFields(a, b){
+		if(a == null) {
+			a = new Array();
+		}
 		while (a.pop()) {}
-		for(var i = 0; i < b.length; i++) {
-			a.push(b[i]);
+		if(b != null) {
+			for(var i = 0; i < b.length; i++) {
+				a.push(b[i]);
+			}
 		}
     return a;
   }
