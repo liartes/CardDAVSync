@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     //DEV ONLY
     // wipe contacts
-    // window.navigator.mozContacts.clear();
+     window.navigator.mozContacts.clear();
     
     // ask for contact access from start
       var filter = {
@@ -80,9 +80,9 @@ window.addEventListener('DOMContentLoaded', function() {
         for (var i = 0; i < servers.length; i++){
           var server = servers[i];
           document.getElementById("div_servers").innerHTML += "<div class=\"div_server\">"+
-            "<span>"+server[0]+"</span>"+
-            "<input type=\"button\" class=\"btn_server btn_sync\" targetkey=\""+server[0]+"\" value=\""+translate('btn_sync')+"\" />"+
-            "<input type=\"button\" class=\"btn_server btn_delete\" targetkey=\""+server[0]+"\" value=\""+translate('btn_delete')+"\" />"+
+            "<div class=\"div_label\"><span>"+server[0]+"</span></div>"+
+            "<div class=\"div_icons\"><img src=\"img/icons/headers/update.png\" targetkey=\""+server[0]+"\" class=\"btn_server btn_sync\"/>"+
+            "<img src=\"img/icons/headers/delete.png\" targetkey=\""+server[0]+"\" class=\"btn_server btn_delete\" /></div>"+
             "<div id=\"log_"+server[0]+"\" class=\"div_log\"></div>"+
             "</div>"
         }
