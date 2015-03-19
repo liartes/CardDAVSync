@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     //DEV ONLY
     // wipe contacts
-     window.navigator.mozContacts.clear();
+    // window.navigator.mozContacts.clear();
     
     // ask for contact access from start
       var filter = {
