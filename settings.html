@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CardDAVSync</title>
+        <meta name="description" content="Sync your cardDAV server with your phone contacts">
+        
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/app.css">
+
+        <script type="text/javascript" src="js/settings.js" defer></script>
+
+        <link rel="prefetch" type="application/l10n" href="data/locales.ini" />
+        <script type="text/javascript" src="js/libs/l10n.js" defer></script>
+    </head>
+    <body>
+        <section data-type="sidebar">
+          <nav>
+            <ul>
+              <li><a href="index.html" data-l10n-id="sync_link"></a></li>
+              <li><a href="inputform.html" data-l10n-id="inputform_link"></a></li>
+              <li><a href="settings.html" data-l10n-id="settings_link"></a></li>
+              <li><a href="help.html" data-l10n-id="help_link"></a></li>
+              <li><a target="_blank" href="https://marketplace.firefox.com/app/carddavsync">Rate this app</a></li>
+            </ul>
+          </nav>
+        </section>
+        <section id="drawer" role="region">
+            <header>
+                <a href="#"><span class="icon icon-menu">hide sidebar</span></a>
+                <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
+                <h1 data-l10n-id="app_title"></h1>
+            </header>
+            <div role="main">
+              <div class="setting_item">
+                  <div>
+                      <span>Merge contact manually</span>
+                      <input type="checkbox" id="merge_contact_chk" />
+                  </div>
+                  <div class="help_div">
+                      <p>Enable this option to manage the sync conflicts by yourself while syncing a server with your phone.</p>
+                  </div>
+              </div>
+            </div>
+        </section>
+    </body>
+</html>

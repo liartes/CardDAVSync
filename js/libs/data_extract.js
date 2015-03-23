@@ -466,7 +466,17 @@ function vCardToContactObject(normalizedVCard) {
         }
         else{
 					console.debug(this.result.length+" concordances dans le repertoire");
-          var contactToSave = mergeContact(this.result[0], contact);
+					if(localStorage.getItem('manualMerging') == undefined) {
+						var manualMerging = confirm("You didn't configure manual merging in settings page. Do you want to manually resolve sync conflicts ?");
+    				if(manualMerging) {
+							localStorage.setItem('manualMerging', "true");
+						}
+						else {
+							localStorage.setItem('manualMerging', "false");
+						}
+					}
+					console.debug(localStorage.getItem('manualMerging'));
+          var contactToSave = mergeContact(this.result[0], contact, localStorage.getItem('manualMerging'));
           navigator.mozContacts.save(contactToSave);
         }
       }
@@ -476,49 +486,107 @@ function vCardToContactObject(normalizedVCard) {
       }
   }
   
-  function mergeContact(oldC, newC){
+  function mergeContact(oldC, newC, isManualMerging){
     if(!arraysEquals(oldC.givenName,newC.givenName)){
-      oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+       oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);
+			}
     }
     if(!arraysEquals(oldC.familyName,newC.familyName)){
-      oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);
+			}
     }
     if(!arraysEquals(oldC.email,newC.email)){
-      oldC.email = mergeArrayFields(oldC.email, newC.email);  
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.email = mergeArrayFields(oldC.email, newC.email);  
+			}
     }
     if(!arraysEquals(oldC.tel,newC.tel)){
-      oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
+			}
     }
     if(!arraysEquals(oldC.photo,newC.photo)){
-      oldC.photo = mergeArrayFields(oldC.photo, newC.photo);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.photo = mergeArrayFields(oldC.photo, newC.photo);
+			}
     }
     if(!arraysEquals(oldC.honorificPrefix,newC.honorificPrefix)){
-      oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);
+			}
     }
     if(!arraysEquals(oldC.honorificSuffix,newC.honorificSuffix)){
-      oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);
+			}
     }
     if(!arraysEquals(oldC.additionalName,newC.additionalName)){
-      oldC.additionnalName = mergeArrayFields(oldC.additionalName, newC.additionalName);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.additionnalName = mergeArrayFields(oldC.additionalName, newC.additionalName);
+			}
     }
     if(!arraysEquals(oldC.nickName,newC.nickName)){
-      oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+     	 oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
+			}
     }
     if(!arraysEquals(oldC.category,newC.category)){
-      oldC.category = mergeArrayFields(oldC.category, newC.category);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+      	oldC.category = mergeArrayFields(oldC.category, newC.category);
+			}
     }
     if(!arraysEquals(oldC.note,newC.note)){
-      oldC.notes = mergeArrayFields(oldC.note, newC.note);
+				console.debug("diff");
+			if(isManualMerging === "true"){ 
+				console.debug("manual merge !");
+			}
+			else {
+     	 oldC.notes = mergeArrayFields(oldC.note, newC.note);
+			}
     }
 		if(!arraysEquals(oldC.adr,newC.adr)){
-			oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+				oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
+			}
 		}
 		if(!arraysEquals(oldC.url,newC.url)){
-			oldC.url = mergeArrayFields(oldC.url, newC.url);
+			if(isManualMerging === "true"){ 
+			}
+			else {
+				oldC.url = mergeArrayFields(oldC.url, newC.url);
+			}
 		}
 		// unique value : no merge method
 		if(oldC.bday.getTime() != newC.bday.getTime()){
-			oldC.bday = newC.bday;
+			if(isManualMerging === "true"){ 
+			}
+			else {
+				oldC.bday = newC.bday;
+			}
 		}
     return oldC;
   }

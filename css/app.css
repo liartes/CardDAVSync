@@ -77,3 +77,21 @@ p {
   display:inline-block;
   
 }
+.setting_item {
+  margin: 5px;
+}
+.setting_item span {
+  position:relative;
+  font-size:1.5rem;
+  top:2px;
+}
+.setting_item input {
+  float:right;
+  height:30px;
+  max-height:30px;
+  width:30px;
+  max-width:30px;
+}
+.help_div p{
+  font-size:0.8rem;
+}
