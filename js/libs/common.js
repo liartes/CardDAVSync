@@ -1,3 +1,31 @@
+// attach the .equals method to Array's prototype to call it on any array
+function arraysEquals(oldArray, newArray) {
+    // if the other array is a falsy value, return
+    if (!newArray)
+        return false;
+
+    // compare lengths - can save a lot of time 
+    if (oldArray.length != newArray.length)
+        return false;
+
+    for (var i = 0, l=oldArray.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (oldArray[i] instanceof Array && newArray[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!oldArray[i].equals(newArray[i]))
+                return false;       
+        }           
+        else if (oldArray[i] != newArray[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+						if(JSON.stringify(oldArray[i]) !== JSON.stringify(newArray[i])) {
+								return false;
+						}
+        }           
+    }       
+    return true;
+}  
+
+
 // Used to match XML element names with any namespace
 jQuery.fn.filterNsNode=function(nameOrRegex)
 {
