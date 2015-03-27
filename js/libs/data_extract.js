@@ -558,9 +558,7 @@ function vCardToContactObject(normalizedVCard) {
 			}
     }
     if(!arraysEquals(oldC.note,newC.note)){
-				console.debug("diff");
 			if(isManualMerging === "true"){ 
-				console.debug("manual merge !");
 			}
 			else {
      	 oldC.notes = mergeArrayFields(oldC.note, newC.note);
