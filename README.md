@@ -4,6 +4,10 @@ CardDAVSync is a Firefox OS app allowing you to synchronize a carddav server wit
 
 ## Changelog
 
+###v 0.1.7
+
+Bugfix : Add scroll to new server form so input don't get hidden behind the keyboard
+
 ###v 0.1.6
 
 Bugfix : Improve existing contact merging
