@@ -8,7 +8,9 @@ CardDAVSync is a Firefox OS app allowing you to synchronize a carddav server wit
 
 Bugfix : Modify the connection test to support Tine2.0 addressbooks
 
-Update : Add Posteo.de (Thanks Eugen !) and Tine2.0 (Thanks Jan !) URL pattern to the Help page
+Update : 
+  - Add Posteo.de (Thanks Eugen !) and Tine2.0 (Thanks Jan !) URL pattern to the Help page
+  - Added a mailto support email
 
 ###v 0.1.7
 
