@@ -50,7 +50,7 @@ function DistantServer () {
                        for(var k = 0; k < propObjList.length; k++){
                           if(propObjList[k].tagName == "d:getcontenttype" || propObjList[k].tagName == "D:getcontenttype"){
                             type = propObjList[k].textContent;
-                            if(type.indexOf("text/x-vcard") != -1){
+                            if(type.indexOf("text/x-vcard") != -1 || type.indexOf("text/vcard") != -1){
                               isAddressbook = true;
                               break;
                             }
