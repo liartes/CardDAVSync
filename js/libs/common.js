@@ -1,6 +1,12 @@
 // attach the .equals method to Array's prototype to call it on any array
 function arraysEquals(oldArray, newArray) {
     // if the other array is a falsy value, return
+		if(oldArray == undefined && newArray == undefined) {
+			return true;
+		}
+		if(oldArray == null && newArray == null) {
+			return true;
+		}
     if (!newArray)
         return false;
 

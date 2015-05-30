@@ -475,7 +475,6 @@ function vCardToContactObject(normalizedVCard) {
 							localStorage.setItem('manualMerging', "false");
 						}
 					}
-					console.debug(localStorage.getItem('manualMerging'));
           var contactToSave = mergeContact(this.result[0], contact, localStorage.getItem('manualMerging'));
           navigator.mozContacts.save(contactToSave);
         }
@@ -488,7 +487,11 @@ function vCardToContactObject(normalizedVCard) {
   
   function mergeContact(oldC, newC, isManualMerging){
     if(!arraysEquals(oldC.givenName,newC.givenName)){
-			if(isManualMerging === "true"){ 
+			if(isManualMerging === "true"){
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_givenname'), oldC.givenName, newC.givenName);
+				if(choice) {
+       		oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);	
+				}
 			}
 			else {
        oldC.givenName = mergeArrayFields(oldC.givenName, newC.givenName);
@@ -496,6 +499,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.familyName,newC.familyName)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_familyname'), oldC.familyName, newC.familyName);
+				if(choice) {
+      		oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);	
+				}
 			}
 			else {
       	oldC.familyName = mergeArrayFields(oldC.familyName, newC.familyName);
@@ -503,6 +510,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.email,newC.email)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_email'), oldC.email, newC.email);
+				if(choice) {	
+      		oldC.email = mergeArrayFields(oldC.email, newC.email); 
+				}
 			}
 			else {
       	oldC.email = mergeArrayFields(oldC.email, newC.email);  
@@ -510,6 +521,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.tel,newC.tel)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_tel'), oldC.tel, newC.tel);
+				if(choice) {
+      		oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
+				}
 			}
 			else {
       	oldC.tel = mergeArrayFields(oldC.tel, newC.tel);
@@ -517,6 +532,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.photo,newC.photo)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_photo'), oldC.photo, newC.photo);
+				if(choice) {
+      		oldC.photo = mergeArrayFields(oldC.photo, newC.photo);	
+				}
 			}
 			else {
       	oldC.photo = mergeArrayFields(oldC.photo, newC.photo);
@@ -524,13 +543,21 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.honorificPrefix,newC.honorificPrefix)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_honorificprefix'), oldC.honorificPrefix, newC.honorificPrefix);
+				if(choice) {
+      		oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);	
+				}
 			}
 			else {
       	oldC.honorificPrefix = mergeArrayFields(oldC.honorificPrefix, newC.honorificPrefix);
 			}
     }
     if(!arraysEquals(oldC.honorificSuffix,newC.honorificSuffix)){
-			if(isManualMerging === "true"){ 
+			if(isManualMerging === "true"){
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_honorificsuffix'), oldC.honorificSuffix, newC.honorificSuffix); 
+				if(choice) {
+      		oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);	
+				}
 			}
 			else {
       	oldC.honorificSuffix = mergeArrayFields(oldC.honorificSuffix, newC.honorificSuffix);
@@ -538,6 +565,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.additionalName,newC.additionalName)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_additionalname'), oldC.additionalName, newC.additionalName);
+				if(choice) {
+      		oldC.additionnalName = mergeArrayFields(oldC.additionalName, newC.additionalName);	
+				}
 			}
 			else {
       	oldC.additionnalName = mergeArrayFields(oldC.additionalName, newC.additionalName);
@@ -545,6 +576,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.nickName,newC.nickName)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_nickname'), oldC.nickName, newC.nickName);
+				if(choice) {
+     	 		oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
+				}
 			}
 			else {
      	 oldC.nickName = mergeArrayFields(oldC.nickName, newC.nickName);
@@ -552,6 +587,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.category,newC.category)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_category'), oldC.category, newC.category);
+				if(choice) {
+      		oldC.category = mergeArrayFields(oldC.category, newC.category);
+				}
 			}
 			else {
       	oldC.category = mergeArrayFields(oldC.category, newC.category);
@@ -559,6 +598,10 @@ function vCardToContactObject(normalizedVCard) {
     }
     if(!arraysEquals(oldC.note,newC.note)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_note'), oldC.note, newC.note);
+				if(choice) {
+     	 	oldC.notes = mergeArrayFields(oldC.note, newC.note);	
+				}
 			}
 			else {
      	 oldC.notes = mergeArrayFields(oldC.note, newC.note);
@@ -566,6 +609,10 @@ function vCardToContactObject(normalizedVCard) {
     }
 		if(!arraysEquals(oldC.adr,newC.adr)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_adr'), oldC.adr, newC.adr);
+				if(choice) {
+					oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
+				}
 			}
 			else {
 				oldC.adr = mergeArrayFields(oldC.adr, newC.adr);
@@ -573,6 +620,10 @@ function vCardToContactObject(normalizedVCard) {
 		}
 		if(!arraysEquals(oldC.url,newC.url)){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_url'), oldC.url, newC.url);
+				if(choice) {
+					oldC.url = mergeArrayFields(oldC.url, newC.url);
+				}
 			}
 			else {
 				oldC.url = mergeArrayFields(oldC.url, newC.url);
@@ -581,6 +632,10 @@ function vCardToContactObject(normalizedVCard) {
 		// unique value : no merge method
 		if(oldC.bday.getTime() != newC.bday.getTime()){
 			if(isManualMerging === "true"){ 
+				var choice = printManualMergingPopup(oldC.name, navigator.mozL10n.get('vcard_bday'), oldC.bday, newC.bday);
+				if(choice) {
+				oldC.bday = newC.bday;
+				}
 			}
 			else {
 				oldC.bday = newC.bday;
@@ -701,3 +756,11 @@ function dataURItoBlob(dataURI) {
 		var bb = new Blob(str, {'type' : mimeString});
     return bb;
 };
+
+function printManualMergingPopup(contactName, fieldName, oldValue, newValue) {
+	var msg = "Merge Conflict\n";
+	var msg = msg+"On "+contactName+"\n";
+	var msg = msg+fieldName+" field \n";
+	var msg = msg+"Do you want to replace old value "+oldValue+" with "+newValue+" ?";
+	return confirm(msg);
+}
