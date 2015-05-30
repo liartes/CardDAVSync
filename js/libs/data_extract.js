@@ -453,6 +453,8 @@ function vCardToContactObject(normalizedVCard) {
 
   function compareToExistingContacts(contact){
     
+		var valueToSearch = "";
+		
      var filter = {
       filterBy: ['name'],
       filterValue: contact.name[0],
@@ -466,6 +468,7 @@ function vCardToContactObject(normalizedVCard) {
         }
         else{
 					console.debug(this.result.length+" concordances dans le repertoire");
+					/*
 					if(localStorage.getItem('manualMerging') == undefined) {
 						var manualMerging = confirm("You didn't configure manual merging in settings page. Do you want to manually resolve sync conflicts ?");
     				if(manualMerging) {
@@ -475,6 +478,8 @@ function vCardToContactObject(normalizedVCard) {
 							localStorage.setItem('manualMerging', "false");
 						}
 					}
+					*/
+					localStorage.setItem('manualMerging', "false");
           var contactToSave = mergeContact(this.result[0], contact, localStorage.getItem('manualMerging'));
           navigator.mozContacts.save(contactToSave);
         }
