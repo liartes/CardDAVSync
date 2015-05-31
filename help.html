@@ -51,8 +51,8 @@
         </section>
         <section id="drawer" role="region">
             <header>
-                <a href="#"><span class="icon icon-menu">hide sidebar</span></a>
-                <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
+                <a href="#"><span class="icon icon-menu" data-l10n-id="hide_sidebar"></span></a>
+                <a href="#drawer"><span class="icon icon-menu" data-l10n-id="show_sidebar"></span></a>
                 <h1 data-l10n-id="app_title"></h1>
             </header>
             <div role="main" style="overflow:scroll">
@@ -71,57 +71,45 @@
            </p>
            <p>
                Tine2.0 : https://[tine20server]/addressbooks/[userhash]/[bookID]
-               <br />
-               Please take in consideration Tine2.0 doesn't use clear username and bookname in the URL. You will have to find these informations by yourself.
            </p>
+               <p data-l10n-id="tine20_warning"></p>
            <p>
               CozyCloud : http(s)://[your.domain.com]/public/sync/addressbooks/[user]/[book]
            </p>
            <h3 data-l10n-id="addressbook_name"></h3>
-               <p>
-                  If you don't know your addressbook name, as 90% of carddav servers name it "default" it is very likely the name to try.    
-               </p>
+               <p data-l10n-id="addressbook_name_content"></p>
            <h3 data-l10n-id="servercert_title"></h3>
-            <p>
-                You must accept your server SSL certificate from Firefox browser. just type https://[yourdomain] in the Firefox browser then add a permanent security exception.
-            </p>
+            <p data-l10n-id="servercert_content"></p>
            <h3 data-l10n-id="doublon_title"></h3>
-            <p>
-                Firefox OS default contact list is not always up-to-date after using CardDAVSync. You can force the refresh by killing the app (long press on home button, then close the contact app) or by rebooting your phone.
-            </p>
+            <p data-l10n-id="doublon_content"></p>
             <h3 data-l10n-id="syncmode_title"></h3>
-            <p>
-                No, this app sync only when you press the "sync" button. It does it only FROM the server TO the phone, it won't load your new contacts to the server (at least not yet, but i'm working on it).
-            </p>
+            <p data-l10n-id="syncmode_content"></p>
             <h3 data-l10n-id="whatsync_title"></h3>
-            <p>
-                This app proudly support the followings Carddav v3 fields :
-            </p>
+            <p data-l10n-id="whatsync_content"></p>
                 <ul>
-                    <li>given name</li>
-                    <li>first name</li>
-                    <li>last name</li>
-                    <li>emails</li>
-                    <li>phone numbers</li>
-                    <li>address</li>
-                    <li>photo</li>
-                    <li>honorific prefix</li>
-                    <li>honorific suffix</li>
-                    <li>additional name</li>
-                    <li>nickname</li>
-                    <li>categories</li>
-                    <li>birthday</li>
-                    <li>note</li>
+                    <li data-l10n-id="vcard_givenname"></li>
+                    <li data-l10n-id="vcard_firstname"></li>
+                    <li data-l10n-id="vcard_lastname"></li>
+                    <li data-l10n-id="vcard_email"></li>
+                    <li data-l10n-id="vcard_tel"></li>
+                    <li data-l10n-id="vcard_adr"></li>
+                    <li data-l10n-id="vcard_photo"></li>
+                    <li data-l10n-id="vcard_honorificprefix"></li>
+                    <li data-l10n-id="vcard_honorificsuffix"></li>
+                    <li data-l10n-id="vcard_additionnalname"></li>
+                    <li data-l10n-id="vcard_nickname"></li>
+                    <li data-l10n-id="vcard_category"></li>
+                    <li data-l10n-id="vcard_bday"></li>
+                    <li data-l10n-id="vcard_note"></li>
+                    <li data-l10n-id="vcard_url"></li>
                </ul>
             <h3 data-l10n-id="gethelp_title"></h3>
-            <p>
-                E-mail me at <a href="mailto:liartes@exileas.com">this address</a> with the following informations : 
+            <p data-l10n-id="gethelp_content"></p>
                    <ul>
-                       <li>your phone model (Open C, Flame ...) </li>
-                       <li>your carddav server (owncloud, SOGo ...)</li>
-                       <li>the bug you are experiencing</li>
+                       <li data-l10n-id="gethelp_data1"></li>
+                       <li data-l10n-id="gethelp_data2"></li>
+                       <li data-l10n-id="gethelp_data3"></li>
                   </ul>
-            </p>
             </div>
         </section>
     </body>
